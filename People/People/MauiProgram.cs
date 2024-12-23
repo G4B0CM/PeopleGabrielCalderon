@@ -13,7 +13,7 @@ public static class MauiProgram
 				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
 			});
 
-        string dbPath = FileAccessHelper.GetLocalFilePath("people.db3");
+        string dbPath = FileAccessHelper.GetLocalFilePath("GabrielCalderon.db3");
         builder.Services.AddSingleton<PersonRepository>(s => ActivatorUtilities.CreateInstance<PersonRepository>(s, dbPath));
 
         return builder.Build();

@@ -32,7 +32,6 @@ public class PersonRepository
         {
             Init();
 
-            // basic validation to ensure a name was entered
             if (string.IsNullOrEmpty(name))
                 throw new Exception("Valid name required");
 
