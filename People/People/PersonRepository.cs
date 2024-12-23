@@ -1,5 +1,7 @@
 ﻿using SQLite;
 using People.Models;
+using static SQLite.SQLite3;
+using System.Xml.Linq;
 namespace People;
 
 public class PersonRepository
@@ -59,5 +61,24 @@ public class PersonRepository
         }
 
         return new List<Person>();
+    }
+    public void EliminarPersona(string name)
+    {
+        int result = 0;
+        try
+        {
+            Init();
+
+            if (string.IsNullOrEmpty(name))
+                throw new Exception("Valid name required");
+            var person = conn.Table<Models.Person>().FirstOrDefault(p => p.Name == name);
+            result = conn.Delete(person);
+
+            StatusMessage = string.Format("{0} record(s) deleted (Name: {1})", result, name);
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = string.Format("Failed to delete {0}. Error: {1}", name, ex.Message);
+        }
     }
 }

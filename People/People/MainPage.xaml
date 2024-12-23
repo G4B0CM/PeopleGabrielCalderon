@@ -20,9 +20,9 @@
                 <Frame WidthRequest="10" BackgroundColor="Transparent" BorderColor="Transparent"/>
                 <VerticalStackLayout>
                     <Label Text="Gabriel Calderón"
-         FontSize="Medium"/>
+                           FontSize="Medium"/>
                     <Label Text="Programación IV"
-         FontSize="Small"/>
+                            FontSize="Small"/>
                 </VerticalStackLayout>
 
             </HorizontalStackLayout>
@@ -36,19 +36,22 @@
                 RowDefinitions="Auto,Auto,Auto,Auto,*">
 
 
-                <Entry Text="{Binding Name}"
+                <Entry x:Name="GCalderonNombre" Text="{Binding Name}"
                      Placeholder="Ingresa un nombre" />
 
-                <Button Text="Añadir Persona"
+                <Button x:Name="GCalderonBotonAgregar"
+                    Text="Añadir Persona"
                     Grid.Row="1"
                         TextColor="DarkCyan"
                     Command="{Binding SaveCommand}" />
 
-                <Label Text="{Binding StatusMessage}"
+                <Label x:Name="GCalderonStatus"
+                    Text="{Binding StatusMessage}"
                    TextColor="DarkCyan"
                    Grid.Row="2" />
 
-                <Button Text="Revisar Listado de personas"
+                <Button x:Name="GCalderonBotonListar"
+                    Text="Revisar Listado de personas"
                         Grid.Row="3"
                         TextColor="DarkCyan"
                         Command="{Binding GetAllPeopleCommand}" />
@@ -56,21 +59,31 @@
                 <CollectionView x:Name="peopleList" 
                                     Grid.Row="4"
                                     ItemsSource="{Binding PeopleList}"
-                                        HeightRequest="200"
-                                    VerticalScrollBarVisibility="Default">
-                    <CollectionView.ItemTemplate>
+                                    HeightRequest="200"
+                                    VerticalScrollBarVisibility="Default"
+                                    SelectionMode="Single"
+                                SelectionChangedCommand="{Binding DeletePersonCommand}"
+             SelectionChangedCommandParameter="{Binding Source={RelativeSource Self}, Path=SelectedItem}"
+                                   >
+
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout Orientation="Vertical" ItemSpacing="3" />
+                    </CollectionView.ItemsLayout>
+
+                    <CollectionView.ItemTemplate >
                         <DataTemplate>
                             <Frame BorderColor="DarkCyan" CornerRadius="10" Padding="20" Margin="5" BackgroundColor="DarkCyan">
                                 <HorizontalStackLayout>
                                     <Label Text="{Binding Id}"
-                           FontSize="Small"
-                           HorizontalTextAlignment="Center"
-                            VerticalTextAlignment="Center"
-                           WidthRequest="30"/>
+                                       FontSize="Small"
+                                       HorizontalTextAlignment="Center"
+                                        VerticalTextAlignment="Center"
+                                       WidthRequest="30"/>
                                     <Label Text="{Binding Name}"
-                           FontSize="Medium"
-                           HorizontalOptions="Center"
-                           VerticalOptions="Center"/>
+                                       FontSize="Medium"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center" />
+                                    
                                 </HorizontalStackLayout>
                             </Frame>
                         </DataTemplate>

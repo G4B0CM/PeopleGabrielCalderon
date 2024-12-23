@@ -7,7 +7,14 @@ namespace People.ViewModels
 {
     public class PersonViewModel : ObservableObject, IQueryAttributable
     {
+        private ObservableCollection<Models.Person> _peopleList;
+        private string _statusMessage;
         private readonly PersonRepository _personRepository;
+        public ICommand SaveCommand { get; }
+        public ICommand GetAllPeopleCommand { get; }
+        public ICommand DeletePersonCommand { get; }
+
+
         private Models.Person _person;
 
         public Models.Person Person
@@ -22,8 +29,7 @@ namespace People.ViewModels
                 }
             }
         }
-
-        private ObservableCollection<Models.Person> _peopleList;
+        
         public ObservableCollection<Models.Person> PeopleList
         {
             get => _peopleList;
@@ -45,15 +51,14 @@ namespace People.ViewModels
 
         public int Id => _person.Id;
 
-        private string _statusMessage;
+        
         public string StatusMessage
         {
             get => _statusMessage;
             set => SetProperty(ref _statusMessage, value);
         }
 
-        public ICommand SaveCommand { get; }
-        public ICommand GetAllPeopleCommand { get; }
+        
 
         public PersonViewModel()
         {
@@ -64,6 +69,7 @@ namespace People.ViewModels
             PeopleList = new ObservableCollection<Models.Person>();
             SaveCommand = new AsyncRelayCommand(Save);
             GetAllPeopleCommand = new AsyncRelayCommand(LoadPeople);
+            DeletePersonCommand = new AsyncRelayCommand<Models.Person>((person)=>Eliminar(person));
         }
 
         private async Task Save()
@@ -82,6 +88,27 @@ namespace People.ViewModels
             catch (Exception ex)
             {
                 StatusMessage = $"Error al guardar la persona: {ex.Message}";
+            }
+        }
+
+        private async Task Eliminar(Models.Person personaAEliminar)
+        {
+            try
+            {
+                if (personaAEliminar == null)
+                {
+                    throw new Exception("Persona no válida.");
+                }
+
+                _personRepository.EliminarPersona(personaAEliminar.Name);
+                PeopleList.Remove(personaAEliminar);
+                StatusMessage = $"Se eliminó a {personaAEliminar.Name}.";
+
+                await Shell.Current.DisplayAlert("Aviso!",$"Gabriel Calderón acaba de eliminar a {personaAEliminar.Name}","Aceptar");
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Error al eliminar a la persona: {ex.Message}";
             }
         }
 
@@ -110,6 +137,14 @@ namespace People.ViewModels
             if (query.ContainsKey("person") && query["person"] is Models.Person person)
             {
                 Person = person;
+            }
+            else if (query.ContainsKey("deleted"))
+            {
+                string nombre = query["deleted"].ToString();
+                Models.Person matchedPerson = PeopleList.FirstOrDefault(p => p.Name == nombre);
+
+                if (matchedPerson != null)
+                    PeopleList.Remove(matchedPerson);
             }
         }
     }
