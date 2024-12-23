@@ -21,7 +21,7 @@
                 <VerticalStackLayout>
                     <Label Text="Gabriel Calderón"
                            FontSize="Medium"/>
-                    <Label Text="Programación IV"
+                    <Label Text="20 años"
                             FontSize="Small"/>
                 </VerticalStackLayout>
 
